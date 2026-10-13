@@ -1,0 +1,106 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# C extensions & distribution
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+venv*/
+.venv/
+env/
+env*/
+ENV/
+ENV*/
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Model weights & checkpoints (heavy binary files)
+*.pt
+*.pth
+*.pwf
+*.onnx
+*.engine
+*.weights
+*.bin
+*.safetensors
+*.tflite
+weights/*
+!weights/.gitkeep
+data/models/*
+!data/models/.gitkeep
+
+# Video & media files (raw inputs & datasets)
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.flv
+*.wmv
+data/input_videos/*
+!data/input_videos/.gitkeep
+data/datasets/*
+!data/datasets/.gitkeep
+
+# Generated outputs & YOLO runs
+outputs/*
+!outputs/.gitkeep
+runs/
+
+# Cache & serialized objects
+*.pkl
+*.pickle
+*.cache
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# IDE & code editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# OS-generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
