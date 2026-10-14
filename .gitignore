@@ -104,3 +104,5 @@ Thumbs.db
 htmlcov/
 .tox/
 .nox/
+
+/presentation

@@ -43,3 +43,14 @@ POSSESSION_MIN_HOLD = 3
 
 TRACK_ACTIVATION_THRESHOLD = 0.35
 MIN_CONSEC_FRAMES = 5   
+
+TEAM_WINDOW_FRAMES = 25       # +/- 1 second (at 25 fps) for the per-frame team vote
+
+DEAD_BALL_WINDOW = 25        # frames (1 s)
+DEAD_BALL_MAX_MOVE = 40      # ball moved less than this many px over the window = stationary
+DEAD_BALL_MIN_FRAMES = 50      # a stationary stretch must last 2 s to count as a restart
+
+
+# Extra statistics
+PLAYER_HEIGHT_M = 1.75        # pixels -> approximate metres, using the player's box height
+SPEED_LABELS = "all"          # "all" = every player, "holder" = only the ball holder, "off" = none

@@ -41,12 +41,13 @@ class TeamAssigner:
     def __init__(self):
         self.km = None
         self.team_colors_bgr = {}      # {0: (b,g,r), 1: (b,g,r)} for drawing
-        self.consistency = None        # mean share of samples agreeing with the final team
+        self.consistency = None        # mean share of samples agreeing within a track
 
     def fit_assign(self, video_path, people):
-        """Annotates every track in `people` with t["team"] (0, 1 or -1 for referees)."""
-        names_cache = {}
-        colors = {}                    # track id -> list of Lab colours
+        """Sets t["team"] on every track entry, per frame (0, 1, or -1 for referees/unknown).
+        The team is a majority vote over a short window around each frame, so an ID swap
+        between two players corrects itself within about a second."""
+        colors = {}                    # track id -> list of (frame index, Lab colour)
 
         cap = cv2.VideoCapture(str(video_path))
         i = 0
@@ -60,38 +61,45 @@ class TeamAssigner:
                         continue
                     c = shirt_color(frame, t["bbox"])
                     if c is not None:
-                        colors.setdefault(tid, []).append(c)
+                        colors.setdefault(tid, []).append((i, c))
             i += 1
         cap.release()
 
-        all_colors = np.array([c for lst in colors.values() for c in lst])
+        all_colors = np.array([c for lst in colors.values() for _, c in lst])
         self.km = KMeans(n_clusters=2, n_init=10, random_state=0).fit(all_colors)
 
-        order = np.argsort(self.km.cluster_centers_[:, 1])      # Lab "a" channel: greener cluster first
+        # stable numbering: team 0 = greener cluster (lower Lab "a" value)
+        order = np.argsort(self.km.cluster_centers_[:, 1])
         remap = {int(old): new for new, old in enumerate(order)}
 
-        # a display colour per team
         for old_k, center in enumerate(self.km.cluster_centers_):
             lab = np.uint8([[np.clip(center, 0, 255)]])
             self.team_colors_bgr[remap[old_k]] = tuple(
                 int(v) for v in cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)[0, 0])
 
-        # one team per track: majority vote
-        team_of, agree = {}, []
+        # team of every colour sample, per track
+        samples, agree = {}, []
         for tid, lst in colors.items():
-            preds = self.km.predict(np.array(lst))
-            team, count = Counter(preds.tolist()).most_common(1)[0]
-            team_of[tid] = remap[int(team)]
-            agree.append(count / len(preds))
+            frs = np.array([f for f, _ in lst])
+            raw = self.km.predict(np.array([c for _, c in lst]))
+            teams = np.array([remap[int(p)] for p in raw])
+            samples[tid] = (frs, teams)
+            agree.append(max(np.mean(teams == 0), np.mean(teams == 1)))
         self.consistency = float(np.mean(agree))
 
-        # write onto players / referees
-        for ft in people:
+        # per-frame team = majority of the samples within +/- TEAM_WINDOW_FRAMES
+        for i, ft in enumerate(people):
             for tid, t in ft.items():
                 if t["role"] == "referee":
                     t["team"] = -1
                 elif t["role"] == "player":
-                    t["team"] = team_of.get(tid, -1)    # -1 if never sampled (very short track)
+                    if tid not in samples:
+                        t["team"] = -1
+                        continue
+                    frs, teams = samples[tid]
+                    near = np.abs(frs - i) <= config.TEAM_WINDOW_FRAMES
+                    vote = teams[near] if near.any() else teams
+                    t["team"] = int(np.bincount(vote, minlength=2).argmax())
 
         self._assign_goalkeepers(people)
         return people

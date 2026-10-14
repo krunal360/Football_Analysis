@@ -6,6 +6,7 @@ from .detector import detect_video
 from .tracker import track_people, best_ball_per_frame, clean_ball, track_summary
 from .team_assigner import TeamAssigner
 from .metrics import player_stats, compute_possession, save_stats
+from .extra_stats import run_extra
 from .visualizer import draw_video
 
 
@@ -30,6 +31,8 @@ def run(video_path, out_name="annotated.mp4", cache_name="detections.pkl", use_c
     stable = stats_df[~stats_df["fragment"]]
     print("Stable tracks:", len(stable), "| median distance (px):", stable["distance_px"].median())
     save_stats(stats_df, poss)
+
+    run_extra(people, ball, holders, stats_df, det["fps"])
 
     out_path = config.OUTPUT_DIR / out_name
     draw_video(video_path, out_path, people, ball, holders, det["fps"])
