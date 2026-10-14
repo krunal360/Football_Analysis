@@ -1,0 +1,40 @@
+{
+  "possession": {
+    "frames": 750,
+    "dead_ball_frames": 116,
+    "team0_frames": 182,
+    "team1_frames": 163,
+    "no_possession_frames": 405,
+    "team0_pct": 52.8,
+    "team1_pct": 47.2,
+    "team0_pct_all_frames": 39.5,
+    "team1_pct_all_frames": 60.5
+  },
+  "top5_by_distance_px": [
+    {
+      "track_id": 11,
+      "team": 1,
+      "distance_px": 1968.6
+    },
+    {
+      "track_id": 12,
+      "team": 0,
+      "distance_px": 1906.6
+    },
+    {
+      "track_id": 28,
+      "team": 0,
+      "distance_px": 1897.2
+    },
+    {
+      "track_id": 27,
+      "team": 1,
+      "distance_px": 1889.8
+    },
+    {
+      "track_id": 4,
+      "team": 1,
+      "distance_px": 1883.2
+    }
+  ]
+}

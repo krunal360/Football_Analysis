@@ -1,7 +1,7 @@
 [project]
 name = "football-analysis"
 version = "0.1.0"
-description = "Add your description here"
+description = "AI-powered football match video analysis using YOLOv8, ByteTrack, and unsupervised team clustering."
 readme = "README.md"
 authors = [
     { name = "Krunal Rohit", email = "krunalrohit36o@gmail.com" }

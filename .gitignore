@@ -67,6 +67,11 @@ data/datasets/*
 # Generated outputs & YOLO runs
 outputs/*
 !outputs/.gitkeep
+!outputs/*.csv
+!outputs/*.json
+!outputs/*.png
+!outputs/eval/
+!outputs/eval/*
 runs/
 
 # Cache & serialized objects
@@ -98,11 +103,15 @@ ehthumbs.db
 Thumbs.db
 [Dd]esktop.ini
 
-# Testing & coverage
+# Testing, coverage & logs
 .pytest_cache/
 .coverage
 htmlcov/
 .tox/
 .nox/
+*.log
 
+# Presentation binaries & slides
+presentation/
 /presentation
+
